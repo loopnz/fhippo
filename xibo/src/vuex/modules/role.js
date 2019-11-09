@@ -6,17 +6,19 @@ export default {
   },
   mutations: {
     getInfo (state, data) {
-      if (data.authorityRouter && data.authorityRouter.indexOf(',') != -1){
-        data.authorityRouter = data.authorityRouter.split(",")
-      } else if (data.authorityRouter == null){
+      if (data.result && data.result.rightIds){
+        data.authorityRouter = data.result.rightIds;
+      } else{
         data.authorityRouter = []
       }
+      data.result = data.result||{};
       state.info = {
-        role: data.role,
-        name: data.name,
+        roleName: data.result.roleName,
+        roleId:data.result.roleId,
+        name: data.result.fullname,
         authorityRouter: data.authorityRouter,
-        avatar: data.avatar ? data.avatar : "/static/images/logo.png",
-        uid: data.id
+        avatar: data.result.avatar ? data.result.avatar : "/static/images/logo.png",
+        uid: data.result.operatorId
       }
       sessionStorage.setItem('info', JSON.stringify(store.getters.info))
     },

@@ -21,7 +21,7 @@ const routerData = {
       //  通过递归路由表，删除掉没有权限的路由
       function eachSelect (routers, userRole) {
         for (let j = 0; j < routers.length; j++) {
-          if (routers[j].r_id && userRole.indexOf(routers[j].r_id.toString()) === -1) {
+          if (routers[j].r_id && userRole.indexOf(routers[j].r_id) === -1) {
             routers.splice(j, 1)
             j = j - 1
           }
@@ -34,11 +34,12 @@ const routerData = {
           }
         }
       }
-      if (store.getters.info.role !== '超级管理员') {
+      if (store.getters.info.roleName !== '管理员') {
         eachSelect(addRouter, perRouter)
       }
       commit('setRouters', addRouter)
       var btns = perRouter.filter((item)=>{
+          item = item+"";
           return item.indexOf('8')===0;
       });
       commit('setBtns', btns)

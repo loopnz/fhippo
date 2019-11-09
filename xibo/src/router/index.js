@@ -5,7 +5,6 @@ import Router from 'vue-router'
 import Login from '@/views/login/index'
 import Layout from '@/views/layout/layout'
 import HomeMain from '@/views/index/mainIndex'
-
 const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -41,6 +40,34 @@ let defaultRouter = [{
       iconCls: 'fa fa-dashboard', // 图标样式class
       name: '主页',
       component: HomeMain,
+      children: []
+    }]
+  },
+  {
+    path: '/editUserPassword',
+    iconCls: 'el-icon-edit-outline', // 图标样式class
+    name: "ew",
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: '/editUserPassword',
+      iconCls: 'el-icon-edit-outline', // 图标样式class
+      name: 'editpassword',
+      component: () => import('@/views/user/edituserpassword'),
+      children: []
+    }]
+  },
+  {
+    path: '/editUserInfo',
+    iconCls: 'el-icon-edit-outline', // 图标样式class
+    name: "eu",
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: '/editUserInfo',
+      iconCls: 'el-icon-edit-outline', // 图标样式class
+      name: 'edituserinfo',
+      component: () => import('@/views/user/edituserinfo'),
       children: []
     }]
   },
@@ -88,26 +115,7 @@ let addRouter = [{
     iconCls: 'el-icon-tickets', // 图标样式class
     name: 'consultation',
     component: () => import('@/views/layout/layout'),
-    children: [
-      // {
-      //   r_id: 100021,
-      //   r_name: roleNmae.myConsultation,
-      //   path: '/myConsultation',
-      //   iconCls: 'el-icon-edit-outline', // 图标样式class
-      //   name: 'myConsultation',
-      //   component: () => import('@/views/consultation/myConsultation'),
-      //   children: []
-      // },
-      // {
-      //   r_id: 100022,
-      //   r_name: roleNmae.consultationList,
-      //   path: '/consultationList',
-      //   iconCls: 'el-icon-edit-outline', // 图标样式class
-      //   name: 'consultationList',
-      //   component: () => import('@/views/consultation/consultationList'),
-      //   children: []
-      // },
-      {
+    children: [{
         r_id: 100023,
         r_name: roleNmae.inspectionConsultation,
         path: '/inspectionConsultation',
@@ -123,6 +131,24 @@ let addRouter = [{
         iconCls: 'el-icon-edit-outline', // 图标样式class
         name: 'pathologicalConsutation',
         component: () => import('@/views/consultation/pathologicalConsultation'),
+        children: []
+      },
+      {
+        r_id: 100025,
+        r_name: roleNmae.consultationList,
+        path: '/consultationList',
+        iconCls: 'el-icon-edit-outline', // 图标样式class
+        name: 'consultationList',
+        component: () => import('@/views/consultation/consultationList'),
+        children: []
+      },
+      {
+        r_id: 100026,
+        r_name: roleNmae.myConsultation,
+        path: '/myConsultation',
+        iconCls: 'el-icon-edit-outline', // 图标样式class
+        name: 'myConsultation',
+        component: () => import('@/views/consultation/myConsultation'),
         children: []
       }
     ]
@@ -196,25 +222,7 @@ let addRouter = [{
         name: 'userManage',
         component: () => import('@/views/systemManage/userList'),
         children: []
-      },
-      // {
-      //   r_id: 100003,
-      //   r_name: roleNmae.editUser,
-      //   path: '/editUser',
-      //   iconCls: 'el-icon-edit-outline', // 图标样式class
-      //   name: 'editUser',
-      //   component: () => import('@/views/systemManage/editUser'),
-      //   children: []
-      // },
-      // {
-      //   r_id: 100030,
-      //   r_name: roleNmae.editPassword,
-      //   path: '/editPassword',
-      //   iconCls: 'el-icon-edit-outline', // 图标样式class
-      //   name: 'editPassword',
-      //   component: () => import('@/views/systemManage/editPassword'),
-      //   children: []
-      // }
+      }
     ]
   },
   {

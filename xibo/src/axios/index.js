@@ -17,7 +17,7 @@ axios.interceptors.request.use(config => {
     if (Cookies.get('access_token')) {
       //用户每次操作，都将cookie设置成半小时
       // Cookies.set('access_token', Cookies.get('access_token') ,{ expires: 7 });
-      config.headers.Authorization = "Bearer" + Cookies.get('access_token')
+      config.headers.token =  Cookies.get('access_token')
     }
     return config;
   },
@@ -29,22 +29,7 @@ axios.interceptors.request.use(config => {
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
-    if (response.data.code === 11000) {
-      // Message({
-      //   message: '长时间未操作,请重新登录',
-      //   type: 'warning'
-      // });
-      Cookies.set('access_token', response.data.message ,{ expires: 7 });
-      // Cookies.remove('access_token');
-      setTimeout(() => {
-        location.reload()
-      }, 500)
-      return Promise.reject()
-    }else if(response.data.code === 10000){
-      Message({
-        message: response.data.message,
-        type: 'warning'
-      });
+   if(response.data.respCode !== "0"){
       return Promise.reject(response)
     }else {
       return Promise.resolve(response);

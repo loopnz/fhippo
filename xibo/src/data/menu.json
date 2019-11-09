@@ -1,0 +1,13 @@
+[
+    {
+        "rightId":"",
+        "rightName":"",
+        "url":"",
+        "parentRightId":"",
+        "rightType":"",
+        "childRights":[],
+        "component":"",
+        "isHidden":true,
+        "isShowInList":false
+    }
+]

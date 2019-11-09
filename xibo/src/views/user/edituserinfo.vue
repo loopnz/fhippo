@@ -6,23 +6,7 @@
              ref="ruleForm2"
              label-width="120px"
              class="demo-ruleForm">
-      <el-form-item label="用户名"
-                    prop="account">
-        <el-input v-model="ruleForm2.account"
-                  autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="密码"
-                    prop="password">
-        <el-input type="password"
-                  v-model="ruleForm2.password"
-                  autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码"
-                    prop="checkPass">
-        <el-input type="password"
-                  v-model="ruleForm2.checkPass"
-                  autocomplete="off"></el-input>
-      </el-form-item>
+
       <el-form-item label="姓名"
                     prop="fullname">
         <el-input v-model="ruleForm2.fullname"
@@ -41,20 +25,6 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="角色"
-                    prop="roleid">
-        <el-select @change="selectRole"
-                   v-model="ruleForm2.roleid"
-                   placeholder="请选择用户角色">
-          <el-option v-for="item in roleData"
-                     :key="item.roleid"
-                     :label="item.rolename"
-                     :value="item.roleid"
-                     :disabled="item.disabled">
-          </el-option>
-        </el-select>
-      </el-form-item>
-
       <el-form-item label="职称"
                     prop="title">
         <el-input v-model="ruleForm2.title"
@@ -101,94 +71,48 @@
 <script>
 import md5 from "md5";
 export default {
-  name: "addUser",
+  name: "edituserinfo",
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else {
-        if (this.ruleForm2.checkPass !== "") {
-          this.$refs.ruleForm2.validateField("checkPass");
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm2.password) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
     return {
       value: "",
       value1: "",
       orgs: [],
       roleData: "",
+      user: {},
       ruleForm2: {
         mobile: "",
         email: "",
-        account: "",
-        password: "",
-        roleid: "",
-        rolename: "",
         orgname: "",
         orgid: "",
         sex: "M",
-        checkPass: "",
         fullname: "",
         idcard: "",
         title: "",
         titledate: "",
+        roleid: "",
+        rolename: "",
+        createtime: "",
+        creator: "",
+        creatorname: "",
+        account: "",
+        operatorid: "",
         status: 1
       },
       rules: {
-        account: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          { min: 3, max: 11, message: "长度在 3 到 11 个字符", trigger: "blur" }
-        ],
-        password: [
-          { required: true, validator: validatePass, trigger: "blur" }
-        ],
-        checkPass: [
-          { required: true, validator: validatePass2, trigger: "blur" }
-        ],
-        title: [{ required: true, message: "请输入职称", trigger: "blur" }],
-        titledate: [
-          { required: true, message: "请选择职称获得日期", trigger: "blur" }
-        ],
-        roleid: [
-          { required: true, message: "请选择用户角色", trigger: "change" }
-        ]
+        // title: [{ required: true, message: "请输入职称", trigger: "blur" }],
+        // titledate: [
+        //   { required: true, message: "请选择职称获得日期", trigger: "blur" }
+        // ]
       }
     };
   },
   methods: {
-    selectRole(v) {
-      this.roleData.forEach(item => {
-        if (item.roleid === v) {
-          this.ruleForm2.rolename = item.rolename;
-        }
-      });
-    },
     selectOrg(v) {
       this.orgs.forEach(item => {
         if (item.orgid === v) {
           this.ruleForm2.orgname = item.orgname;
         }
       });
-    },
-    getList() {
-      this.$axios
-        .post("/sysrole/findValidRole")
-        .then(res => {
-          this.roleData = res.data.result;
-        })
-        .catch(error => {
-          console.log(error);
-        });
     },
     getOrgs() {
       this.$axios
@@ -210,10 +134,13 @@ export default {
               form.append(item, this.ruleForm2[item]);
             }
           }
-
-                  var password = form.get("password");
-          if(password){
-              form.set("password",md5(password));
+          var o = form.get("titledate");
+          if (o && typeof o === "string") {
+            form.set("titledate", new Date(o));
+          }
+          var o1 = form.get("createtime");
+          if (o1 && typeof o1 === "string") {
+            form.set("createtime", new Date(o1));
           }
           this.$axios
             .post("/sysoperator/saveOperator", form, {
@@ -227,24 +154,6 @@ export default {
                 message: res.data.respMsg,
                 type: "success"
               });
-              that.ruleForm2 = {
-                mobile: "",
-                email: "",
-                account: "",
-                password: "",
-                roleid: "",
-                rolename: "",
-                orgname: "",
-                orgid: "",
-                sex: "M",
-                checkPass: "",
-                fullname: "",
-                idcard: "",
-                title: "",
-                titledate: "",
-                status: 1
-              };
-              that.$emit("complete");
             })
             .catch(err => {
               console.log(err);
@@ -257,10 +166,29 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    getUserInfo() {
+      var form = new FormData();
+      form.append("operatorid", this.$store.getters.info.uid);
+      this.$axios
+        .post("/sysoperator/getOperator", form, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(res => {
+          this.user = res.data.result;
+          for (let key in this.ruleForm2) {
+            this.ruleForm2[key] = res.data.result[key];
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
   mounted() {
-    this.getList();
+    this.getUserInfo();
     this.getOrgs();
   }
 };

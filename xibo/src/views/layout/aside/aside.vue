@@ -5,9 +5,20 @@
         <p v-if="$store.getters.logoShow">MA</p>
         <p v-else>medical admin</p>
       </div>
-      <el-menu :default-active="$route.path" class="el-menu-vertical" @select="selectmenu" :collapse="$store.getters.isCollapse" background-color="#03152A" text-color="rgba(255,255,255,.7)" active-text-color="#ffffff" :router="$store.getters.uniquerouter" :unique-opened="$store.getters.uniquerouter" :collapse-transition="true">
-        <template v-for="(item,index) in $store.getters.routers" v-if="!item.hidden">
-          <el-submenu v-if="!item.alone && item.children.length>0" :index="index+''">
+      <el-menu :default-active="$route.path"
+               class="el-menu-vertical"
+               @select="selectmenu"
+               :collapse="$store.getters.isCollapse"
+               background-color="#03152A"
+               text-color="rgba(255,255,255,.7)"
+               active-text-color="#ffffff"
+               :router="$store.getters.uniquerouter"
+               :unique-opened="$store.getters.uniquerouter"
+               :collapse-transition="true">
+        <template v-for="(item,index) in $store.getters.routers"
+                  v-if="!item.hidden">
+          <el-submenu v-if="!item.alone && item.children.length>0"
+                      :index="index+''">
             <template slot="title">
               <i :class="item.iconCls?item.iconCls:[fa,fa-server]"></i>
               <span slot="title">{{ $t(`routeNmae.${item.name}`) }}</span>
@@ -16,7 +27,8 @@
             <menu-tree :menuData="item.children"></menu-tree>
 
           </el-submenu>
-          <el-menu-item :index="item.path" v-else>
+          <el-menu-item :index="item.path"
+                        v-else>
             <i :class="item.iconCls?item.iconCls:[fa,fa-file]"></i>
             <span slot="title">{{ $t(`routeNmae.${item.name}`) }}</span>
           </el-menu-item>

@@ -65,6 +65,8 @@
   </div>
 </template>
 <script>
+import md5 from "md5";
+import qs from "qs"
   export default {
     data() {
       return {
@@ -97,23 +99,28 @@
           //   })
           // })
 
-          this.$axios.post('/user/login',{
-            username: that.loginForm.username,
-            password: that.loginForm.password,
+          var form = new FormData;
+          form.append("account",that.loginForm.username);
+          form.append("pwd",md5(that.loginForm.password))
+
+          this.$axios.post('/login',form,{
+            headers:{
+               'Content-Type': 'application/x-www-form-urlencoded'
+            }
           }).then((res)=>{
-            that.$store.dispatch('setToken', res.data.data.access_token).then( res => {
+            that.$store.dispatch('setToken', res.data.result.token).then( res => {
               that.$router.push({path: '/'})
               }).catch(res => {
                 that.$message({
                   showClose: true,
-                  message: res.message,
+                  message: res.data.respMsg,
                   type: 'error'
                 })
               })
           }).catch((err)=>{
             that.$message({
               showClose: true,
-              message: err.data.message,
+              message: err.data.respMsg,
               type: 'error'
             })
           })

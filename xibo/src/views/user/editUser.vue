@@ -101,22 +101,28 @@
 <script>
 import md5 from "md5";
 export default {
-  name: "addUser",
+  props: {
+    item: Object,
+    show: {
+      type: Boolean,
+      default: true
+    }
+  },
+  name: "editUser",
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("请输入密码"));
       } else {
         if (this.ruleForm2.checkPass !== "") {
           this.$refs.ruleForm2.validateField("checkPass");
         }
-        callback();
       }
+      callback();
     };
     var validatePass2 = (rule, value, callback) => {
-      if (value === "") {
+      if (this.ruleForm2.password && value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm2.password) {
+      } else if (this.ruleForm2.password && value !== this.ruleForm2.password) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
@@ -150,10 +156,10 @@ export default {
           { min: 3, max: 11, message: "长度在 3 到 11 个字符", trigger: "blur" }
         ],
         password: [
-          { required: true, validator: validatePass, trigger: "blur" }
+          { required: false, validator: validatePass, trigger: "blur" }
         ],
         checkPass: [
-          { required: true, validator: validatePass2, trigger: "blur" }
+          { required: false, validator: validatePass2, trigger: "blur" }
         ],
         title: [{ required: true, message: "请输入职称", trigger: "blur" }],
         titledate: [
@@ -210,8 +216,15 @@ export default {
               form.append(item, this.ruleForm2[item]);
             }
           }
-
-                  var password = form.get("password");
+          var o = form.get("titledate");
+          if (typeof o === "string") {
+            form.set("titledate", new Date(o));
+          }
+          var o1 = form.get("createtime");
+          if (typeof o1 === "string") {
+            form.set("createtime", new Date(o1));
+          }
+          var password = form.get("password");
           if(password){
               form.set("password",md5(password));
           }
@@ -227,24 +240,7 @@ export default {
                 message: res.data.respMsg,
                 type: "success"
               });
-              that.ruleForm2 = {
-                mobile: "",
-                email: "",
-                account: "",
-                password: "",
-                roleid: "",
-                rolename: "",
-                orgname: "",
-                orgid: "",
-                sex: "M",
-                checkPass: "",
-                fullname: "",
-                idcard: "",
-                title: "",
-                titledate: "",
-                status: 1
-              };
-              that.$emit("complete");
+              that.$emit("edit");
             })
             .catch(err => {
               console.log(err);
@@ -260,8 +256,23 @@ export default {
     }
   },
   mounted() {
+    for (let key in this.item) {
+      this.ruleForm2[key] = this.item[key];
+    }
+    this.ruleForm2.checkPass = "";
+
     this.getList();
     this.getOrgs();
+  },
+  watch: {
+    show(newVal) {
+      this.$nextTick(() => {
+        for (let key in this.item) {
+          this.ruleForm2[key] = this.item[key];
+        }
+        this.ruleForm2.checkPass = "";
+      });
+    }
   }
 };
 </script>

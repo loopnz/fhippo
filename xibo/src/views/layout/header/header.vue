@@ -9,7 +9,7 @@
         <li>
           <langSelect></langSelect>
         </li>
-        <li>{{ this.$store.getters.info.role }}</li>
+        <li>{{ this.$store.getters.info.roleName }}</li>
         <li>
           <el-dropdown @command="handleCommand">
                   <span class="el-dropdown-link">
@@ -75,12 +75,12 @@
       },
       handleCommand (command) {
         if (command === 'info') {
-          this.$router.push({path: '/editUser?userId=' + this.$store.getters.info.uid});
+          this.$router.push({path: '/editUserInfo'});
         } else if (command === 'logout') {
           Cookies.remove('access_token');
           location.reload()
         } else if (command === 'editPassworld') {
-          this.$router.push({path: '/editPassworld'});
+          this.$router.push({path: '/editUserPassword'});
         }
       }
     }

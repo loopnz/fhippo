@@ -33,16 +33,21 @@ const en = {
     navMenu: 'navMenu',
     systemManage: 'systemManage',
     roleManage: 'roleManage',
-    systemSetting: 'systemSetting'
+    systemSetting: 'systemSetting',
+    editpassword:'editpassword',
+    edituserinfo:'edituserinfo'
   },
 
   btns:{
     upload:'upload',
     download:'download',
     read:'read',
+    add:'add',
     delete:'delete',
     mark:'mark',
     edit:'edit',
+    consultation:'consultation',
+    export:'export excel',
     uploadDaily:'uploadDaily',
     consultationDaily:'consultationDaily',
     markDaily:'markDaily',
@@ -50,13 +55,20 @@ const en = {
     initiating :'initiating',
     submit:'submit',
     cancel:'cancel',
+    downloadSlide:'downloadSlide',
+    fillDiagnostic:'fillDiagnostic',
+    view:'view',
     userManage: 'userManage',
     roleManage: 'roleManage',
     pathological: 'pathological',
     inspection: 'inspection',
+    allConsutation:'allConsutation',
+    myConsultation:'myConsultation',
     pathologicalConsutation:'pathologicalConsutation',
     inspectionConsultation:'inspectionConsultation',
     systemManage: 'systemManage',
+    editpassword:'editpassword',
+    edituserinfo:'edituserinfo'
   },
   rightMenu: {
     close: 'close',

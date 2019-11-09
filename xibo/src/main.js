@@ -3,7 +3,9 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import axios from './axios/index'
+import moment from "moment";
 Vue.prototype.$axios = axios
+Vue.prototype.$moment = moment;
 
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/iconfont/iconfont.css'
@@ -26,7 +28,7 @@ router.beforeEach((to, from, next) => {
       if (!store.getters.info) {
         !(async function getAddRouters() {
           axios
-            .get('/user/getUserInfor')
+            .get('/operator/getOperator')
             .then(async function(response) {
               await store.dispatch('getInfo', response.data)
               await store.dispatch(
